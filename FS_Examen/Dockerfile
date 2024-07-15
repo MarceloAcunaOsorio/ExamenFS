@@ -1,6 +1,6 @@
-FROM node:16
+FROM node:20.14 AS build
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 COPY package*.json ./
 
@@ -8,8 +8,12 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3000
+RUN npm run build --prod
 
-ENV PORT=3000
+FROM nginx:alpine
 
-CMD [ "node", "backend.js" ]
+COPY --from=build /app/dist/FS_Examen/browser /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "aemon off;"]
