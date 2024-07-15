@@ -12,8 +12,10 @@ RUN npm run build --prod
 
 FROM nginx:alpine
 
-COPY --from=build /app/dist/FS_Examen/browser /usr/share/nginx/html
+COPY --from=build /app/dist/fs-examen/browser /usr/share/nginx/html
+
+RUN if [ -f /usr/share/nginx/html/index.csr.html ]; then mv /usr/share/nginx/html/index.csr.html /usr/share/nginx/html/index.html; fi
 
 EXPOSE 80
 
-CMD ["nginx", "-g", "aemon off;"]
+CMD ["nginx", "-g", "daemon off;"]
